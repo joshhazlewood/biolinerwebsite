@@ -23,6 +23,7 @@
     "bulma": "^0.7.1",
     "core-js": "^2.5.4",
     "rxjs": "^6.0.0",
+    "xml2js": "^0.4.19",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

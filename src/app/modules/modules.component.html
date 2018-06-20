@@ -1,3 +1,45 @@
-<p>
-  modules works!
-</p>
+<div class="section">
+  <div class="container">
+      <div class="tabs">
+          <ul>
+            <li [ngClass]="{ 'is-active' : activeTab === 'modules' }">
+              <a (click)="showTab('modules')">Modules</a>
+            </li>
+            <li [ngClass]="{ 'is-active' : activeTab === 'new-module' }">
+              <a (click)="showTab('new-module')">Add New Module</a>
+            </li>
+          </ul>
+        </div>
+
+        <ng-container *ngIf="activeTab === 'modules' && !isLoading">
+          <div class="box" *ngFor="let module of modules">
+            <div class="columns">
+              <div class="column is-5 is-offset-1">
+                <p class="is-size-5 has-text-weight-semibold">Name:</p>
+                <p class="is-size-6 pad-left pad-bot">{{ module.name }}</p>
+                <p class="is-size-5 has-text-weight-semibold">Description:</p>
+                <p class="is-size-6 pad-left pad-bot">{{ module.description }}</p>
+              </div>
+              <div class="column is-5 is-offset-1">
+                  <p class="is-size-5 has-text-weight-semibold">Parameters:</p>
+                  <p class="is-size-6 pad-left pad-bot">{{ module.params }}</p>
+                  <p class="is-size-5 has-text-weight-semibold">Command:</p>
+                  <p class="is-size-6 pad-left pad-bot">{{ module.command }}</p>
+                  <p class="is-size-5 has-text-weight-semibold">Input File:</p>
+                  <p class="is-size-6 pad-left pad-bot">{{ module.inputFile }}</p>
+                  <p class="is-size-5 has-text-weight-semibold">Output file required:</p>
+                  <p class="is-size-6 pad-left pad-bot">{{ module.outputFile_req }}</p>
+                  <ng-container *ngIf="module.outputFile_req === 'true'">
+                    <p *ngIf="module.outputFile_req" class="is-size-5 has-text-weight-semibold">Output File:</p>
+                    <p *ngIf="module.outputFile_req" class="is-size-6 pad-left pad-bot">{{ module.outputFile }}</p>
+                  </ng-container>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="activeTab === 'new-module'">
+            <p>new-module tab</p>
+        </ng-container>
+  </div>
+</div>
