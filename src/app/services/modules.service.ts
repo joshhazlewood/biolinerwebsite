@@ -11,4 +11,8 @@ export class ModulesService {
   getAllModules() {
     return this.http.get('/modules/all-modules');
   }
+
+  postNewModule(data) {
+    return this.http.post('/modules/user-module', data);
+  }
 }

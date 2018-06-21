@@ -1,0 +1,76 @@
+<div class="columns">
+  <div class="column is-8 is-offset-2">
+    <form [formGroup]="newModuleForm">
+      <div class="field">
+        <label for="name" class="label">Name</label>
+        <div class="control">
+          <input type="text" class="input" id="name" formControlName="name" placeholder="Name">
+        </div>
+      </div>
+      <div class="field">
+        <label for="description" class="label">Description</label>
+        <div class="control">
+          <input type="text" class="input" id="description" formControlName="description" placeholder="description">
+        </div>
+      </div>
+      <div class="field">
+        <label for="inputFile" class="label">Input file</label>
+        <div class="control">
+          <input type="text" class="input" id="inputFile" formControlName="inputFile" placeholder="Input File">
+        </div>
+      </div>
+      <div class="field">
+        <label for="outputFile_required" class="label">Output File Required</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="outputFile_required" formControlName="outputFile_required" value="true" (click)="toggleOutputFileField(false)"> true
+          </label>
+          <label class="radio">
+            <input type="radio" name="outputFile_required" formControlName="outputFile_required" value="false" (click)="toggleOutputFileField(true)"> false
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="outputFile" class="label">Output File</label>
+        <div class="control">
+          <input type="text" class="input" id="outputFile" formControlName="outputFile" placeholder="Output File" [required]="this.newModuleForm.get('outputFile_required').value">
+        </div>
+      </div>
+      <div class="field">
+        <label for="params" class="label">Parameters</label>
+        <div class="control">
+          <input type="text" class="input" id="params" formControlName="params" placeholder="Parameters">
+        </div>
+      </div>
+      <div class="field">
+        <label for="command" class="label">Command</label>
+        <div class="control">
+          <input type="text" class="input" id="command" formControlName="command" placeholder="Command">
+        </div>
+      </div>
+
+      <div class="file has-name">
+        <label class="file-label">
+          <input class="file-input" type="file" formControlName="file" name="resume" (change)="onFileChange($event)">
+          <span class="file-cta">
+            <span class="file-icon">
+              <i class="fas fa-upload"></i>
+            </span>
+            <span class="file-label">
+              Choose a file…
+            </span>
+          </span>
+          <span class="file-name">
+            Upload Jar file
+          </span>
+        </label>
+      </div>
+      <div class="control">
+        <a class="button" (click)="submitForm()"></a>
+      </div>
+    </form>
+    <p>Form value: {{ newModuleForm.value | json }}</p>
+    <p>Form status: {{ newModuleForm.status | json }}</p>
+    <p>{{ newModuleForm.get('outputFile_required').value }}</p>
+  </div>
+</div>
