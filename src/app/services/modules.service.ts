@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Module } from './../interfaces/module';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModulesService {
+
+  public userModules: Module[] = Array();
 
   constructor(private http: HttpClient) { }
 
@@ -15,4 +18,10 @@ export class ModulesService {
   postNewModule(data) {
     return this.http.post('/modules/user-module', data);
   }
+
+  addNewUserModule(userModule: Module) {
+    this.userModules.push(userModule);
+    console.log(this.userModules);
+  }
+
 }

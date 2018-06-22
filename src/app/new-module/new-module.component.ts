@@ -1,3 +1,4 @@
+import { Module } from './../interfaces/module';
 import { ModulesService } from './../services/modules.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +13,7 @@ export class NewModuleComponent implements OnInit {
 
   public newModuleForm: FormGroup;
   public fileIsRead = null;
+  public userModules = this.modulesService.userModules;
 
   constructor(private fb: FormBuilder,
               private modulesService: ModulesService) {
@@ -71,8 +73,14 @@ export class NewModuleComponent implements OnInit {
 
   submitForm() {
     console.log('here');
-    const data = this.newModuleForm.value;
-    this.modulesService.postNewModule(data);
+    const data: Module = this.newModuleForm.value;
+    this.modulesService.addNewUserModule(data);
+    // this.modulesService.postNewModule(data);
+  }
+
+  isValid() {
+    const isValid = this.newModuleForm.valid;
+    return isValid;
   }
 
 }

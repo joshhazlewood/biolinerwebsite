@@ -27,6 +27,10 @@ router.get('/all-modules', (req, res) => {
   });
 });
 
+router.post('/user-module', (req, res) => {
+
+});
+
 router.get('/test', (req, res) => {
   res.send('hello world');
 })

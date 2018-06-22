@@ -10,6 +10,7 @@ import { WorkflowsComponent } from './workflows/workflows.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { NewModuleComponent } from './new-module/new-module.component';
+import { ListModulesComponent } from './list-modules/list-modules.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -25,6 +26,7 @@ const appRoutes: Routes = [
     ModulesComponent,
     HomeComponent,
     NewModuleComponent,
+    ListModulesComponent,
   ],
   imports: [
     BrowserModule,

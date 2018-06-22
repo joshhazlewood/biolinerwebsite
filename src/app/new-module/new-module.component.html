@@ -65,12 +65,17 @@
           </span>
         </label>
       </div>
-      <div class="control">
-        <a class="button" (click)="submitForm()"></a>
+      <div class="field">
+        <div class="control">
+          <button class="button is-info" [attr.disabled]='isValid() === false ? true : null' (click)="submitForm()">Add Module</button>
+        </div>
       </div>
     </form>
     <p>Form value: {{ newModuleForm.value | json }}</p>
     <p>Form status: {{ newModuleForm.status | json }}</p>
     <p>{{ newModuleForm.get('outputFile_required').value }}</p>
+    <div *ngFor="let module of userModules">
+      <p >{{ this.module.name }}, {{ this.module.file }}</p>
+    </div>
   </div>
 </div>

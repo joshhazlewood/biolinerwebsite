@@ -6,4 +6,5 @@ export interface Module {
   outputFile?: string;
   params: string;
   command: string;
+  file?: File;
 }
