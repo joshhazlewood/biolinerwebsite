@@ -19,4 +19,11 @@ export class ModulesComponent implements OnInit {
     this.activeTab = tab;
   }
 
+  changeTab(tab: string) {
+    //  Only way I could get switching tab to work from inside another component.
+    if (tab === 'modules') {
+      this.activeTab = tab;
+    }
+  }
+
 }

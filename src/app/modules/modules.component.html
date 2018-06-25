@@ -16,11 +16,7 @@
         </ng-container>
 
         <ng-container *ngIf="activeTab === 'new-module'">
-          <app-new-module></app-new-module>
+          <app-new-module (change)="changeTab($event)"></app-new-module>
         </ng-container>
-
-        <!-- <ng-container *ngIf="activeTab === 'new-module'">
-            <p>new-module tab</p>
-        </ng-container> -->
   </div>
 </div>

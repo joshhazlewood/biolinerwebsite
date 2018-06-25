@@ -1,6 +1,6 @@
 import { Module } from './../interfaces/module';
 import { ModulesService } from './../services/modules.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./new-module.component.css']
 })
 export class NewModuleComponent implements OnInit {
+  @Output() change: EventEmitter<string> = new EventEmitter();
 
   public newModuleForm: FormGroup;
   public fileIsRead = null;
@@ -27,6 +28,9 @@ export class NewModuleComponent implements OnInit {
     this.newModuleForm = this.fb.group({
       name: ['',
         [Validators.required],
+      ],
+      category: ['',
+        [Validators.required]
       ],
       description: ['',
         [Validators.required]
@@ -75,7 +79,7 @@ export class NewModuleComponent implements OnInit {
     console.log('here');
     const data: Module = this.newModuleForm.value;
     this.modulesService.addNewUserModule(data);
-    // this.modulesService.postNewModule(data);
+    this.change.emit('modules');
   }
 
   isValid() {
