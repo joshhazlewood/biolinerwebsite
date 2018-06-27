@@ -43,21 +43,21 @@
         </div>
       </div>
       <div class="field">
-        <label for="params" class="label">Parameters</label>
-        <div class="control">
-          <input type="text" class="input" id="params" formControlName="params" placeholder="Parameters">
-        </div>
-      </div>
-      <div class="field">
         <label for="command" class="label">Command</label>
         <div class="control">
           <input type="text" class="input" id="command" formControlName="command" placeholder="Command">
         </div>
       </div>
+      <div class="field">
+        <label for="params" class="label">Parameters</label>
+        <div class="control">
+          <input type="text" class="input" id="params" formControlName="params" placeholder="Parameters">
+        </div>
+      </div>
 
       <div class="file has-name">
         <label class="file-label">
-          <input class="file-input" type="file" formControlName="file" name="resume" (change)="onFileChange($event)">
+          <input class="file-input" type="file" (change)="onFileChange($event)">
           <span class="file-cta">
             <span class="file-icon">
               <i class="fas fa-upload"></i>
@@ -72,7 +72,7 @@
         </label>
       </div>
       <div class="field">
-        <div class="control">
+        <div class="pad-top">
           <button class="button is-info" [attr.disabled]='isValid() === false ? true : null' (click)="submitForm()">Add Module</button>
         </div>
       </div>

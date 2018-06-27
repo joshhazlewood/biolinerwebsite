@@ -43,11 +43,14 @@ export class NewModuleComponent implements OnInit {
       ],
       outputFile: ['',
       ],
-      params: ['',
-        [Validators.required]
-      ],
       command: ['',
         [Validators.required]
+      ],
+      params: ['',
+        [
+          Validators.required,
+          Validators.pattern(/^(-{1}([A-z0-9]*) ([A-z0-9]{1,})( ?)){1,}$/),
+        ]
       ],
       file: [null,
         [Validators.required]]
@@ -67,6 +70,9 @@ export class NewModuleComponent implements OnInit {
     if (event.target.files && event.target.files.length > 0) {
       // const file = event.target.files[0];
       const file = (event.target as HTMLInputElement).files[0];
+      console.log(file.name);
+      this.newModuleForm.patchValue({file: file});
+      this.newModuleForm.get('file').updateValueAndValidity();
       reader.readAsDataURL(file);
       reader.onload = () => {
         console.log('here');
@@ -79,6 +85,7 @@ export class NewModuleComponent implements OnInit {
     console.log('here');
     const data: Module = this.newModuleForm.value;
     this.modulesService.addNewUserModule(data);
+    this.modulesService.postNewModule(data);
     this.change.emit('modules');
   }
 

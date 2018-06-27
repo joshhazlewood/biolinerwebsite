@@ -30,8 +30,8 @@ export class ListModulesComponent implements OnInit {
             inputFile: element['inputFile'],
             outputFile_required: element['outputFile_required'],
             outputFile: element['outputFile'],
-            params: element['params'],
             command: element['command'],
+            params: element['params'],
           };
           console.log(rawModules);
           console.log(typeof module.outputFile_required);

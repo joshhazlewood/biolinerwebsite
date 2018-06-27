@@ -1,69 +1,152 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const mkdirp = require("mkdirp");
 
-var fs = require('fs'),
-    xml2js = require('xml2js');
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname.split(" ").join("-");
+    const fileExtention = file.originalname.split(".").pop();
+    const nameWithoutExtension = name.replace(/\.[^/.]+$/, "");
+    const fileName =
+      nameWithoutExtension + "-" + Date.now() + "." + fileExtention;
+    cb(null, fileName);
+  }
+});
 
-router.get('/all-modules', (req, res) => {
-  var parser = new xml2js.Parser({explicitArray : false});
+var fs = require("fs"),
+  xml2js = require("xml2js");
 
-  const fs = require('fs'),
-    path = require('path'),
-    filePath = path.join(__dirname, '../modules.xml');
+router.get("/all-modules", (req, res) => {
+  var parser = new xml2js.Parser({ explicitArray: false });
 
-  fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
-      if (!err) {
-          console.log('received data: ' + data);
+  const fs = require("fs"),
+    path = require("path"),
+    filePath = path.join(__dirname, "../modules.xml");
 
-          parser.parseString(data, (err, result) => {
-            res.send(result);
-          })
-          // res.writeHead(200, {'Content-Type': 'text/xml'});
-          // res.write(data);
-          // res.end();
-      } else {
-          console.log(err);
-      }
+  fs.readFile(filePath, { encoding: "utf-8" }, function(err, data) {
+    if (!err) {
+      console.log("received data: " + data);
+
+      parser.parseString(data, (err, result) => {
+        console.log();
+        res.send(result);
+      });
+    } else {
+      console.log(err);
+    }
   });
 });
 
-router.post('/user-module', (req, res) => {
+const upload = multer({ storage: storage });
+router.post("/user-module", upload.single("file"), (req, res) => {
+  const {
+    name,
+    category,
+    description,
+    inputFile,
+    outputFile_required,
+    outputFile,
+    command,
+    params
+  } = req.body;
+  let moduleToAdd = {};
+  const uniquePathToSave = "./temp/modules_" + Date.now() + ".xml";
 
+  if (outputFile_required === "true") {
+    moduleToAdd = {
+      name: name,
+      category: category,
+      description: description,
+      inputFile: inputFile,
+      outputFile_required: outputFile_required,
+      outputFile: outputFile,
+      command: command,
+      params: params
+    };
+  } else {
+    moduleToAdd = {
+      name: name,
+      category: category,
+      description: description,
+      inputFile: inputFile,
+      outputFile_required: outputFile_required,
+      command: command,
+      params: params
+    };
+  }
+
+  generateNewXmlFile(moduleToAdd, uniquePathToSave, res);
 });
 
-router.get('/test', (req, res) => {
-  res.send('hello world');
+router.post("/test", (req, res) => {
+  console.log("testing");
 });
-var unzip = require('unzip');
 
-// fs.createReadStream('bioliner-1.0-SNAPSHOT.jar').pipe(unzip.Extract({ path: 'output/bio1' }));
-// fs.createReadStream('example1.jar').pipe(unzip.Extract({ path: 'output/bio1' }));
+router.get("/test", (req, res) => {
+  res.send("hello world");
+});
 
-// var zlib = require('zlib');
-// zlib.unzip()
-// createJarFile();
+function generateNewXmlFile(dataToAppend, filePathToSave, res) {
+  const js2xmlparser = require("js2xmlparser");
+  const xml2js = require("xml2js").parseString;
 
-function createJarFile() {
-  var archiver = require('archiver');
+  fs.readFile("./modules.xml", (err, data) => {
+    if (!err) {
+      xml2js(data, (error, editableJSON) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(JSON.stringify(editableJSON));
+          let newJson = {
+            module: editableJSON.modules.module
+          };
+          newJson.module.push(dataToAppend);
+          const resultXML = js2xmlparser.parse("modules", newJson);
+          fs.writeFile(filePathToSave, resultXML, err => {
+            if (err) {
+              console.log(err);
+              res.status(500).send();
+            } else {
+              res.status(200).send();
+              console.log("file created");
+            }
+          });
+        }
+      });
+    } else {
+      console.log(err);
+    }
+  });
+}
 
-  // var output = fs.createWriteStream('../output/jars/example1.zip');
-  var output = fs.createWriteStream('./output/jars/example1.jar');
-  var archive = archiver('zip', {
-    zlib: { level: 0 } // Sets the compression level.
+// zipDirectory();
+
+function zipDirectory() {
+  var archiver = require("archiver");
+
+  var output = fs.createWriteStream("./bioliner.zip");
+  var archive = archiver("zip", {
+    zlib: { level: 9 } // Sets the compression level.
   });
 
-  output.on('close', function() {
-    console.log(archive.pointer() + ' total bytes');
-    console.log('archiver has been finalized and the output file descriptor has closed.');
+  output.on("close", function() {
+    console.log(archive.pointer() + " total bytes");
+    console.log(
+      "archiver has been finalized and the output file descriptor has closed."
+    );
   });
 
-  output.on('end', function() {
-    console.log('Data has been drained');
+  output.on("end", function() {
+    console.log("Data has been drained");
   });
 
   // good practice to catch warnings (ie stat failures and other non-blocking errors)
-  archive.on('warning', function(err) {
-    if (err.code === 'ENOENT') {
+  archive.on("warning", function(err) {
+    if (err.code === "ENOENT") {
       // log warning
     } else {
       // throw error
@@ -71,16 +154,23 @@ function createJarFile() {
     }
   });
 
-
   // good practice to catch this error explicitly
-  archive.on('error', function(err) {
+  archive.on("error", function(err) {
     throw err;
   });
 
   archive.pipe(output);
 
-  archive.directory('./output/bio1/', false);
+  archive.directory("./original_bioliner/", false);
   archive.finalize();
+}
+
+function addNewModuleToDirectory() {
+  fs.copyFile("./temp/modules.xml", "./output/bio1/config/modules.xml", err => {
+    if (err) {
+      console.log(err);
+    }
+  });
 }
 
 module.exports = router;
