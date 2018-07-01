@@ -23,12 +23,20 @@ export class ListModulesComponent implements OnInit {
         console.log(data);
         const rawModules: any[] = data.modules.module;
         rawModules.map(element => {
+          let outputFileReqFlag;
+
+          if (element['outputFile_required'] === 'true') {
+            outputFileReqFlag = true;
+          } else {
+            outputFileReqFlag = false;
+          }
+
           const module: Module = {
             name: element['name'],
             category: element['category'],
             description: element['description'],
             inputFile: element['inputFile'],
-            outputFile_required: element['outputFile_required'],
+            outputFile_required: outputFileReqFlag,
             outputFile: element['outputFile'],
             command: element['command'],
             params: element['params'],

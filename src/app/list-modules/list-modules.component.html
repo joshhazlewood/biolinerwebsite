@@ -19,7 +19,7 @@
           <p class="is-size-6 pad-left pad-bot">{{ module.inputFile }}</p>
           <p class="is-size-5 has-text-weight-semibold">Output file required:</p>
           <p class="is-size-6 pad-left">{{ module.outputFile_required }}</p>
-          <ng-container *ngIf="module.outputFile_required === 'true'">
+          <ng-container *ngIf="module.outputFile_required">
             <p *ngIf="module.outputFile_required" class="is-size-5 has-text-weight-semibold">Output File:</p>
             <p *ngIf="module.outputFile_required" class="is-size-6 pad-left pad-bot">{{ module.outputFile }}</p>
           </ng-container>
@@ -47,7 +47,7 @@
             <p class="is-size-6 pad-left pad-bot">{{ module.inputFile }}</p>
             <p class="is-size-5 has-text-weight-semibold">Output file required:</p>
             <p class="is-size-6 pad-left">{{ module.outputFile_required }}</p>
-            <ng-container *ngIf="module.outputFile_required === 'true'">
+            <ng-container *ngIf="module.outputFile_required">
               <p *ngIf="module.outputFile_required" class="is-size-5 has-text-weight-semibold">Output File:</p>
               <p *ngIf="module.outputFile_required" class="is-size-6 pad-left pad-bot">{{ module.outputFile }}</p>
             </ng-container>
