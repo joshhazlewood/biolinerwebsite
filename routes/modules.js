@@ -90,6 +90,14 @@ router.get("/test", (req, res) => {
   res.send("hello world");
 });
 
+router.post("/new-workflow", (req, res) => {
+  const inputConfig = req.body.inputConfig;
+  // console.log(req.body);
+  // console.log(inputConfig);
+  generateInputXml(inputConfig);
+  res.status(200).send();
+});
+
 function generateNewXmlFile(dataToAppend, filePathToSave, res) {
   const js2xmlparser = require("js2xmlparser");
   const xml2js = require("xml2js").parseString;
@@ -244,14 +252,19 @@ function getWorkflowString(workflowArray) {
   return workflowString;
 }
 
-testInputXmlGeneration();
+// testInputXmlGeneration();
 
 function testInputXmlGeneration() {
   var js2xmlparser = require("js2xmlparser");
   console.log(js2xmlparser.parse("inputConfig", js2xmltestObj));
 }
 
-testXmlToJson();
+function generateInputXml(objToConvert) {
+  var js2xmlparser = require("js2xmlparser");
+  console.log(js2xmlparser.parse("inputConfig", objToConvert))
+}
+
+// testXmlToJson();
 
 function testXmlToJson() {
   var parser = new xml2js.Parser({ explicitArray: false });

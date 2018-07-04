@@ -45,4 +45,8 @@ export class ModulesService {
     console.log(this.userModules);
   }
 
+  generateInputXml(data: any) {
+    return this.http.post('/modules/new-workflow', data);
+  }
+
 }

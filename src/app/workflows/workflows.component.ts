@@ -112,7 +112,8 @@ export class WorkflowsComponent implements OnInit {
 
   createInputForm() {
     const input = new FormGroup({
-      'input': new FormControl('', Validators.required),
+      'name': new FormControl(''),
+      'params': new FormControl('', Validators.required),
       'inputFile': new FormControl('', Validators.required),
       'outputFile': new FormControl(''),
     });
@@ -122,7 +123,59 @@ export class WorkflowsComponent implements OnInit {
 
   /** This needs to be implemented */
   createInputFile() {
-    console.log('here');
+    this.addModuleNamesToForm();
+    const workflow = this.getWorkflowAsString();
+    const outputFolder = this.workflowForm.get('outputFolder').value;
+    const uniqueId = this.workflowForm.get('uniqueId').value;
+
+    const modules = {
+      module: []
+    };
+
+    (<FormArray>this.inputsForm.get('inputs')).controls.map( x => {
+      const name = x.get('name').value;
+      const inputFile = x.get('inputFile').value;
+      const outputFile = x.get('outputFile').value;
+      const params = x.get('params').value;
+      const inputStr = this.getInputString(inputFile, outputFile, params);
+      const module = {
+        name: name,
+        input: inputStr
+      };
+      modules.module.push(module);
+    });
+
+    const data = {
+      inputConfig: {
+        workflow : workflow,
+        outputFolder: outputFolder,
+        uniqueId: uniqueId,
+        modules: modules
+      }
+    };
+    console.log(data);
+    this.modulesService.generateInputXml(data).subscribe( (resData) => {
+      console.log(resData);
+    });
+  }
+
+  getWorkflowAsString(): string {
+    let workflow = '';
+    this.workflow.map( x => workflow = workflow + x + ',');
+    workflow = workflow.substring(0, workflow.length - 1);
+    return workflow;
+  }
+
+  getInputString(inputfile: string, outputfile: string, params: string): string {
+    const inputStr = `["Inputfile:${inputfile}","outputfile:${outputfile}","${params}"]`;
+    return inputStr;
+  }
+
+  addModuleNamesToForm(): void {
+    for (let i = 0; i < this.workflow.length; i++) {
+      const name: string = this.workflow[i];
+      (<FormArray>this.inputsForm.get('inputs')).at(i).get('name').patchValue(name);
+    }
   }
 
   formIsValid(): boolean {
