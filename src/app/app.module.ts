@@ -15,7 +15,7 @@ import { ListModulesComponent } from './list-modules/list-modules.component';
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'modules', component: ModulesComponent },
-  { path: 'workflows', component: WorkflowsComponent }
+  { path: 'workflows', component: WorkflowsComponent },
 ];
 
 @NgModule({

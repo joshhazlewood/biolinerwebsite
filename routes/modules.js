@@ -173,4 +173,104 @@ function addNewModuleToDirectory() {
   });
 }
 
+var jsObjToConvert = {
+  "modules": [
+    { "module": "M1", "params": [ { "key": "-p", "value": "asd" }, { "key": "-p", "value": "test" } ] },
+    { "module": "M2", "params": [ { "key": "-test", "value": "test" } ] }
+  ]
+};
+
+var js2xmltestObj = {
+  inputConfig : {
+    workflows : [
+      { workflow : "M1,M2,M3" },
+      { workflow : "M2,M4" },
+    ],
+    outputFolder : './logs',
+    uniqueId: 'testRun1',
+    modules : {
+      module : [
+        { name : "M1", input : "testinput string" },
+        { name : "M2", input : "testinput2 string2" },
+        { name : "M3", input : "testinput3 string3" },
+        { name : "M4", input : "testinput4 string4" },
+      ]
+    }
+  }
+}
+
+// convertJsonToUseableJs();
+
+function convertJsonToUseableJs() {
+  const workflows = [];
+  const paramStrings = [];
+  // const workflow = [];
+
+  jsObjToConvert.modules.map( element => {
+    const workflow = [];
+    workflow.push(element['module']);
+    let inputString = "[";
+    element.params.map(x => {
+      let elementParams = "\"" + x['key'] + ":" + x['value'] + "\",";
+      inputString = inputString + elementParams;
+    });
+
+    inputString = inputString.substring(0, inputString.length - 1);
+    inputString = inputString + "]";
+    paramStrings.push(inputString);
+    console.log(workflow);
+    const elementWorkflowString = getWorkflowString(workflow);
+    console.log(elementWorkflowString);
+    workflows.push(elementWorkflowString);
+  })
+  console.log(paramStrings);
+  let finalObj = {
+    inputConfig : {
+      workflows : []
+    }
+  }
+  workflows.map( x => {
+    finalObj.inputConfig.workflows.push(x);
+  })
+  // console.log(finalObj);
+}
+
+function getWorkflowString(workflowArray) {
+  let workflowString = "";
+  workflowArray.map( x => {
+    console.log(x);
+    workflowString = workflowString + x
+  });
+  return workflowString;
+}
+
+testInputXmlGeneration();
+
+function testInputXmlGeneration() {
+  var js2xmlparser = require("js2xmlparser");
+  console.log(js2xmlparser.parse("inputConfig", js2xmltestObj));
+}
+
+testXmlToJson();
+
+function testXmlToJson() {
+  var parser = new xml2js.Parser({ explicitArray: false });
+
+  const fs = require("fs"),
+    path = require("path"),
+    filePath = path.join(__dirname, "../input.xml");
+
+  fs.readFile(filePath, { encoding: "utf-8" }, function(err, data) {
+    if (!err) {
+      console.log("received data: " + data);
+
+      parser.parseString(data, (err, result) => {
+        console.log(result);
+      });
+    } else {
+      console.log(err);
+    }
+  });
+}
+
 module.exports = router;

@@ -1,3 +1,155 @@
-<p>
-  workflows works!
-</p>
+<div class="section">
+    <div class="container">
+      <p class="title is-size-5">Create a workflow</p>
+
+      <div class="box">
+        <form [formGroup]="workflowForm">
+
+          <div class="field">
+            <label class="label">Unique ID</label>
+            <div class="control">
+              <input class="input" type="text" formControlName="uniqueId" placeholder="Unique ID" [ngClass]="{
+                'is-success' : uniqueId.valid || (uniqueId.dirty || uniqueId.touched),
+                'is-danger' : uniqueId.invalid && (uniqueId.dirty || uniqueId.touched)
+              }">
+            </div>
+
+            <div *ngIf="uniqueId.errors && (uniqueId.dirty || uniqueId.touched)">
+              <p class="help is-danger pad-bottom" *ngIf="uniqueId.errors['required']">
+                Unique ID is required.
+              </p>
+            </div>
+          </div>
+
+
+          <div class="field">
+            <label class="label">Output Folder:</label>
+            <div class="control">
+              <input class="input" type="text" formControlName="outputFolder" placeholder="Output Folder" [ngClass]="{
+                'is-success' : outputFolder.valid || (outputFolder.dirty || outputFolder.touched),
+                'is-danger' : outputFolder.invalid && (outputFolder.dirty || outputFolder.touched)
+              }">
+            </div>
+
+            <div *ngIf="outputFolder.errors && (outputFolder.dirty || outputFolder.touched)">
+                <p class="help is-danger pad-bottom" *ngIf="outputFolder.errors['required']">
+                  Output Folder is required.
+                </p>
+              </div>
+          </div>
+          <div class="field has-addons">
+            <div class="control">
+              <div class="select">
+                <select class="form-control" formControlName="module">
+                  <option *ngFor="let module of moduleNames" [value]="module">{{module}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="control">
+              <button class="button is-info is-outlined" (click)="addModuleToWorkflow()">Add Module</button>
+            </div>
+          </div>
+        </form>
+
+        <ng-container *ngIf="workflow.length > 0">
+          <p class="has-text-weight-semibold margin-top">Current workflow:</p>
+          <p class="has-text-weight-semibold">{{ workflowString }}</p>
+          <!-- <ul>
+            <li *ngFor="let module of workflow">{{module}}</li>
+          </ul> -->
+        </ng-container>
+        <!-- form valid + workflow length needs doing -->
+        <button class="button is-info margin-top" [attr.disabled]="formIsValid() === false ? true : null" (click)="createInputsForm()">Add input variables</button>
+      </div>
+
+      <div class="box">
+        <p>workflowform value: {{ workflowForm.value | json}}</p>
+        <p>workflowForm valid: {{ workflowForm.valid | json }}</p>
+        <ng-container *ngIf="inputsFormCreated">
+          <p>inputsform value: {{ inputsForm.value | json}}</p>
+          <p>inputsForm valid: {{ inputsForm.valid | json }}</p>
+        </ng-container>
+      </div>
+
+      <ng-container *ngIf="inputsFormCreated">
+        <form [formGroup]="inputsForm">
+          <div formArrayName="inputs">
+            <div *ngFor="let input of inputsForm.get('inputs')['controls']; let i=index;" class="box">
+              <div>
+                <div class="columns">
+                  <div class="column is-5 is-offset-1">
+                    <p class="is-size-6 has-text-weight-semibold">Name:</p>
+                    <p class="is-size-6 pad-left pad-bot">{{ userPickedModules[i].name }}</p>
+                    <p class="is-size-6 has-text-weight-semibold">Category:</p>
+                    <p class="is-size-6 pad-left pad-bot">{{ userPickedModules[i].category }}</p>
+                    <p class="is-size-6 has-text-weight-semibold">Output file required:</p>
+                    <p class="is-size-6 pad-left">{{ userPickedModules[i].outputFile_required }}</p>
+                  </div>
+                  <div class="column is-5 is-offset-1">
+                    <p class="is-size-6 has-text-weight-semibold">Description:</p>
+                    <p class="is-size-6 pad-left ">{{ userPickedModules[i].description }}</p>
+                    <!-- <p class="is-size-5 has-text-weight-semibold">Parameters:</p>
+                    <p class="is-size-6 pad-left pad-bot">{{ userPickedModules[i].params }}</p> -->
+                    <!-- <p class="is-size-5 has-text-weight-semibold">Input File:</p>
+                    <p class="is-size-6 pad-left pad-bot">{{ userPickedModules[i].inputFile }}</p> -->
+
+                    <!-- <ng-container *ngIf="userPickedModules[i].outputFile_required">
+                      <p *ngIf="userPickedModules[i].outputFile_required" class="is-size-5 has-text-weight-semibold">Output File:</p>
+                      <p *ngIf="userPickedModules[i].outputFile_required" class="is-size-6 pad-left pad-bot">{{ userPickedModules[i].outputFile }}</p>
+                    </ng-container> -->
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-offset-1">
+                    <p class="is-size-6 has-text-weight-semibold">Command:</p>
+                    <p class="is-size-6 pad-left pad-bot">{{ userPickedModules[i].command }}</p>
+                  </div>
+                </div>
+              </div>
+              <div [formGroupName]="i">
+                <ng-container *ngIf="i==0">
+                  <div class="field">
+                    <label class="label">Input File</label>
+                    <div class="control">
+                      <input class="input" type="text" placeholder="Text input" formControlName="inputFile">
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="i>0">
+                  <div class="field">
+                    <label class="label">Input File</label>
+                    <div class="control">
+                      <input class="input" type="text" placeholder="Text input"   formControlName="inputFile">
+                      <!-- [value]="inputsForm.get('inputs').controls[i-1].get('outputFile').value" -->
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="userPickedModules[i].outputFile_required">
+                  <div class="field">
+                    <label class="label">Output File</label>
+                    <div class="control">
+                      <input class="input" type="text" placeholder="Text input" (ngModelChange)="updateNextInputField($event, i)" formControlName="outputFile">
+                    </div>
+                  </div>
+                </ng-container>
+
+                <div class="field">
+                  <div class="control">
+                    <label class="is-size-5 has-text-weight-semibold">Parameters:</label>
+                    <textarea class="textarea" formControlName="input" placeholder="Params here..."></textarea>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </form>
+        <button class="button is-success margin-top" [attr.disabled]="inputsFormIsValid() === false ? true : null" (click)="createInputFile()">Create Input File</button>
+      </ng-container>
+
+
+    </div>
+  </div>
