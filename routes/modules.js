@@ -86,8 +86,9 @@ router.post("/test", (req, res) => {
   console.log("testing");
 });
 
-router.get("/test", (req, res) => {
-  res.send("hello world");
+router.get("/download/default-build", (req, res) => {
+  var file = './bioliner.zip';
+  res.download(file, 'bioliner.zip');
 });
 
 router.post("/new-workflow", (req, res) => {

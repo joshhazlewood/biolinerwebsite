@@ -11,11 +11,13 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { NewModuleComponent } from './new-module/new-module.component';
 import { ListModulesComponent } from './list-modules/list-modules.component';
+import { DownloadsComponent } from './downloads/downloads.component';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'modules', component: ModulesComponent },
   { path: 'workflows', component: WorkflowsComponent },
+  { path: 'downloads', component: DownloadsComponent },
 ];
 
 @NgModule({
@@ -27,6 +29,7 @@ const appRoutes: Routes = [
     HomeComponent,
     NewModuleComponent,
     ListModulesComponent,
+    DownloadsComponent,
   ],
   imports: [
     BrowserModule,
