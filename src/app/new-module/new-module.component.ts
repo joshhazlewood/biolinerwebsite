@@ -1,3 +1,4 @@
+import { DownloadService } from './../download.service';
 import { Module } from './../interfaces/module';
 import { ModulesService } from './../services/modules.service';
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
@@ -17,7 +18,9 @@ export class NewModuleComponent implements OnInit {
   public userModules = this.modulesService.userModules;
 
   constructor(private fb: FormBuilder,
-              private modulesService: ModulesService) {
+              private modulesService: ModulesService,
+              private downloadsService: DownloadService,
+            ) {
     this.createForm();
    }
 
@@ -49,7 +52,6 @@ export class NewModuleComponent implements OnInit {
       params: ['',
         [
           Validators.required,
-          Validators.pattern(/^(-{1}([A-z0-9]*) ([A-z0-9]{1,})( ?)){1,}$/),
         ]
       ],
       file: [null,
@@ -82,10 +84,16 @@ export class NewModuleComponent implements OnInit {
   }
 
   submitForm() {
-    console.log('here');
     const data: Module = this.newModuleForm.value;
     this.modulesService.addNewUserModule(data);
-    this.modulesService.postNewModule(data);
+    this.modulesService.postNewModule(data).subscribe(
+      (res: any) => {
+        const status = res.status;
+        if (status === 200) {
+          this.downloadsService.newModuleAdded = true;
+        }
+      }
+    );
     this.change.emit('modules');
   }
 

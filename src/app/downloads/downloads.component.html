@@ -1,5 +1,17 @@
 <div class="section">
   <div class="container">
-    <button type="button" class="button" (click)="saveFile()">Download Bioliner</button>
+
+    <h2 class="subtitle">Default Bioliner</h2>
+    <button type="button" class="button" (click)="saveFile()">Download</button>
+
+    <ng-container *ngIf="workflowGenerated && !modulesAdded">
+      <h2 class="subtitle pad-top">Bioliner with workflow</h2>
+      <button type="button" class="button"(click)="saveFileWithWorkflow()">Download Bioliner with workflow</button>
+    </ng-container>
+
+    <ng-container *ngIf="modulesAdded && workflowGenerated">
+      <h2 class="subtitle pad-top">Bioliner with workflow and user-added module(s)</h2>
+      <button type="button" class="button"(click)="saveFileWithModules()">Download Bioliner with workflow + modules</button>
+    </ng-container>
   </div>
 </div>

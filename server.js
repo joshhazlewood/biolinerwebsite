@@ -2,11 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
+const session = require('express-session');
+const uniqid = require('uniqid')
+const secret = require('./secret.txt');
 
 const app = express();
 const router = express.Router;
 const modules = require('./routes/modules');
 // const api = require('./routes/api');
+const hour = 3600000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -26,6 +30,13 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use(session({
+  genid: function(req) {
+    return uniqid() // use UUIDs for session IDs
+  },
+  secret: secret.secret,
+}))
 
 // app.use(app.router);
 // routes.initialize(app);

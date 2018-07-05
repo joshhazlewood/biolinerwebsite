@@ -1,3 +1,4 @@
+import { DownloadService } from './../download.service';
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormArray, FormControl, FormsModule } from '@angular/forms';
 import { Module } from './../interfaces/module';
@@ -21,7 +22,9 @@ export class WorkflowsComponent implements OnInit {
   public workflowString: string;
 
   constructor(private fb: FormBuilder,
-    private modulesService: ModulesService) { }
+    private modulesService: ModulesService,
+    private downloadsService: DownloadService,
+    ) { }
 
   ngOnInit() {
     this.createWorkflowForm();
@@ -57,6 +60,11 @@ export class WorkflowsComponent implements OnInit {
         if (userModules.length > 0) {
           this.modules = this.modules.concat(userModules);
         }
+
+        userModules.map( (x) => {
+          this.moduleNames.push(x.name);
+        });
+
         console.log(this.modules);
         this.isLoading = false;
       }
@@ -154,8 +162,12 @@ export class WorkflowsComponent implements OnInit {
       }
     };
     console.log(data);
-    this.modulesService.generateInputXml(data).subscribe( (resData) => {
-      console.log(resData);
+    this.modulesService.generateInputXml(data).subscribe(
+      (res: any) => {
+      const status = res.status;
+      if (status === 200) {
+        this.downloadsService.workflowGenerated = true;
+      }
     });
   }
 

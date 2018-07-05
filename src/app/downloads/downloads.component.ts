@@ -9,14 +9,30 @@ import { saveAs } from 'file-saver';
 })
 export class DownloadsComponent implements OnInit {
 
+  public modulesAdded: boolean;
+  public workflowGenerated: boolean;
   constructor(private downloadService: DownloadService) { }
 
   ngOnInit() {
+    this.modulesAdded = this.downloadService.newModuleAdded;
+    this.workflowGenerated = this.downloadService.workflowGenerated;
   }
 
   saveFile() {
     // const FileSave = new FileSaver();
     this.downloadService.getDefaultBuild().subscribe(response => {
+      this.saveToFileSystem(response);
+    });
+  }
+
+  saveFileWithWorkflow() {
+    this.downloadService.getBuildWithWorkflow().subscribe(response => {
+      this.saveToFileSystem(response);
+    });
+  }
+
+  saveFileWithModules() {
+    this.downloadService.getBuildWithWorkflow().subscribe(response => {
       this.saveToFileSystem(response);
     });
   }

@@ -33,11 +33,7 @@ export class ModulesService {
     moduleData.append('params', data['params']);
     moduleData.append('file', file);
 
-    return this.http.post('/modules/user-module', moduleData ).subscribe(
-      responseData => {
-        console.log(responseData);
-      }
-    );
+    return this.http.post('/modules/user-module', moduleData, { responseType: 'text', observe: 'response' } );
   }
 
   addNewUserModule(userModule: Module) {
@@ -46,7 +42,7 @@ export class ModulesService {
   }
 
   generateInputXml(data: any) {
-    return this.http.post('/modules/new-workflow', data);
+    return this.http.post('/modules/new-workflow', data, { responseType: 'text', observe: 'response' });
   }
 
 }
