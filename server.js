@@ -4,7 +4,7 @@ const path = require('path');
 const http = require('http');
 const session = require('express-session');
 const uniqid = require('uniqid')
-const secret = require('./secret.txt');
+// const secret = require('./secret.txt');
 
 const app = express();
 const router = express.Router;
@@ -35,7 +35,8 @@ app.use(session({
   genid: function(req) {
     return uniqid() // use UUIDs for session IDs
   },
-  secret: secret.secret,
+  // secret: secret.secret,
+  secret: 'secpass'
 }))
 
 // app.use(app.router);
