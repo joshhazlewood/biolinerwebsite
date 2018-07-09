@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inputConfig>
+    <workflow>M1,M2,M3</workflow>
+    <outputFolder>C:\Users\Josh\Desktop\biolinerOutput</outputFolder>
+    <uniqueId>testRun1</uniqueId>
+    <modules>
+        <module>
+            <name>M1</name>
+            <input>
+                ["Inputfile:C/Desktop/file.txt","outputfile:C/Desktop/output.txt","-param1 value1 -param2 value2 -param3 value3"]
+            </input>
+        </module>
+        <module>
+            <name>M2</name>
+            <input>
+                ["Inputfile:C/Desktop/output.txt","outputfile:C/Desktop/output2.txt","-param1 value1 -param2 value2 -param3 value3"]
+            </input>
+        </module>
+        <module>
+            <name>M3</name>
+            <input>
+                ["Inputfile:C/Desktop/output2.txt","outputfile:C/Desktop/output3.txt","-param1 value1 -param2 value2 -param3 value3"]
+            </input>
+        </module>
+    </modules>
+</inputConfig>
